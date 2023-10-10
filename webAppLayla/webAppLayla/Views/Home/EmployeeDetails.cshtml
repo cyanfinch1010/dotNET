@@ -1,0 +1,81 @@
+﻿@using webAppLayla.Models
+@model HomeModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>EmployeeDetails</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="~/Content/styles2.css" rel="stylesheet" />
+</head>
+<body>
+    <script src="~/Scripts/bootstrap.bundle.js"></script>
+    <h1 class="text-center"><span class="material-symbols-outlined">account_circle</span> Employee Details</h1>
+    @foreach (modHome item in Model.empList)
+    {
+        <section class="vh-100">
+            <div class="container py-5 h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col col-lg-6 mb-4 mb-lg-0">
+                        <div class="card mb-3 shadow bg-body-tertiary rounded" style="border-radius: .5rem;">
+                            <div class="og row g-0">
+                                <div class="col-md-4 gradient-custom text-center text-white" style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+                                    <img src="https://www.freeiconspng.com/thumbs/person-icon/msn-people-person-profile-user-icon--icon-search-engine-11.png" alt="Avatar" class="img-fluid my-5" style="width: 80px;" />
+                                    <h5>@Html.DisplayFor(modelItem => item.emp_lastName) @Html.DisplayFor(modelItem => item.emp_firstName)</h5>
+                                    <p>Fullstack Developer of GSC</p>
+                                    <p>Status: @Html.DisplayFor(modelItem => item.emp_accountStatus)</p>
+                                    <p>Gender: @Html.DisplayFor(modelItem => item.emp_gender)</p>
+                                    <a href="#"><span class="material-symbols-outlined">edit</span></a>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body p-4">
+                                        <h6>Information</h6>
+                                        <hr class="mt-0 mb-4">
+                                        <div class="row pt-1">
+                                            <div class="col-6 mb-3">
+                                                <h6>Email</h6>
+                                                <p class="text-muted">@Html.DisplayFor(modelItem => item.emp_email)</p>
+                                            </div>
+                                            <div class="col-6 mb-3">
+                                                <h6>I.D</h6>
+                                                <p class="text-muted">@Html.DisplayFor(modelItem => item.emp_id)</p>
+                                            </div>
+                                        </div>
+                                        <h6>User Credentials</h6>
+                                        <hr class="mt-0 mb-4">
+                                        <div class="row pt-1">
+                                            <div class="col-6 mb-3">
+                                                <h6>Username</h6>
+                                                <p class="text-muted">@Html.DisplayFor(modelItem => item.emp_Username)</p>
+                                            </div>
+                                            <div class="col-6 mb-3">
+                                                <h6>Password</h6>
+                                                <p class="text-muted">@Html.DisplayFor(modelItem => item.emp_Userpassword)</p>
+                                            </div>
+                                        </div>
+                                        <h6>Social Media</h6>
+                                        <hr class="mt-0 mb-4">
+                                        <div class="d-flex justify-content-around">
+                                            <a href="#" class="fa fa-facebook"></a>
+                                            <a href="#" class="fa fa-twitter"></a>
+                                            <a href="#" class="fa fa-instagram"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+</body>
+</html>
