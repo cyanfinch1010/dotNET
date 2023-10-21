@@ -428,56 +428,56 @@ namespace estupidyante.Controllers
             }
         }
 
-        //[Route("api/employee/remove", Name = "Delete_Employee_Remove")]
-        //public HttpResponseMessage Delete_Employee_Remove(string emp_id)
-        //{
-        //    using (MySqlConnection SQLCON = new MySqlConnection(ConfigurationManager.ConnectionStrings["const"].ConnectionString))
-        //    {
-        //        try
-        //        {
-        //            if (SQLCON.State == ConnectionState.Closed)
+        [Route("api/employee/switch", Name = "Employee_Switch_Status")]
+        public HttpResponseMessage Employee_Switch_Status([FromUri] modEmployeeList p)
+        {
+            using (MySqlConnection SQLCON = new MySqlConnection(ConfigurationManager.ConnectionStrings["const"].ConnectionString))
+            {
+                try
+                {
+                    if (SQLCON.State == ConnectionState.Closed)
 
-        //            {
+                    {
 
-        //                SQLCON.Open();
-        //                MySqlCommand sqlComm = new MySqlCommand();
-        //                sqlComm.Connection = SQLCON;
+                        SQLCON.Open();
+                        MySqlCommand sqlComm = new MySqlCommand();
+                        sqlComm.Connection = SQLCON;
 
-        //                sqlComm.CommandText = "UPDATE `employee` SET `emp_status` = 0 WHERE `emp_id` = @emp_id LIMIT 1";
+                        sqlComm.CommandText = "UPDATE `employee` SET `emp_status` =  WHERE `emp_id` = @emp_id LIMIT 1";
 
-        //                sqlComm.Parameters.Add(new MySqlParameter("@emp_id", emp_id));
-        //                sqlComm.ExecuteNonQuery(); //EXECUTE MYSQL QUEUE STRING
-        //                response = Request.CreateResponse(HttpStatusCode.OK);
-        //                response.Content = new StringContent("Successfully Removed");
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_id", p.emp_id));
+                        sqlComm.ExecuteNonQuery(); //EXECUTE MYSQL QUEUE STRING
+                        response = Request.CreateResponse(HttpStatusCode.OK);
+                        response.Content = new StringContent("Successfully Removed");
 
-        //                return response;
-        //            }
-        //            else
-        //            {
+                        return response;
+                    }
+                    else
+                    {
 
-        //                response = Request.CreateResponse(HttpStatusCode.InternalServerError);
+                        response = Request.CreateResponse(HttpStatusCode.InternalServerError);
 
-        //                response.Content = new StringContent("Unable to connect to the database server", Encoding.UTF8);
+                        response.Content = new StringContent("Unable to connect to the database server", Encoding.UTF8);
 
-        //                return response;
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            response = Request.CreateResponse(HttpStatusCode.InternalServerError);
+                        return response;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.InternalServerError);
 
-        //            response.Content = new StringContent("There is an error in performing this action: " + ex.ToString(), Encoding.Unicode);
+                    response.Content = new StringContent("There is an error in performing this action: " + ex.ToString(), Encoding.Unicode);
 
-        //            return response;
-        //        }
-        //        finally //ALWAYS CLOSE AND DISPOSE THE CONNECTION AFTER USING
-        //        {
-        //            SQLCON.Close();
-        //            SQLCON.Dispose();
+                    return response;
+                }
+                finally //ALWAYS CLOSE AND DISPOSE THE CONNECTION AFTER USING
+                {
+                    SQLCON.Close();
+                    SQLCON.Dispose();
 
-        //        }
-        //    }
-        //}
+                }
+            }
+        }
 
     }
 }

@@ -17,7 +17,8 @@
 </head>
 <body>
     <script src="~/Scripts/bootstrap.bundle.js"></script>
-    
+    <script src="~/Scripts/jquery-3.7.1.js"></script>
+
     <div class="card position-absolute top-50 start-50 translate-middle shadow-lg p-3 mb-5 bg-body-tertiary rounded">
         <h1 class="text-center">
             <span class="material-symbols-outlined">
@@ -33,7 +34,8 @@
                     <th>Email</th>
                     <th>Gender</th>
                     <th>Status</th>
-                    <th scope="col" colspan="2" class="text-center"><a href="@Url.Action("AddEmployee", "Home")" class="btn btn-primary"><span class="material-symbols-outlined">person_add</span></a></th>
+                    <th class="text-center"><a href="@Url.Action("AddEmployee", "Home")" class="btn btn-primary"><span class="material-symbols-outlined">person_add</span></a></th>
+                    <th scope="col" colspan="2" class="text-center">Change Status</th>
                 </tr>
                 @foreach (modHome item in Model.empList)
                 {
@@ -53,17 +55,25 @@
                         <td class="nonclick">
                             @Html.DisplayFor(modelItem => item.emp_gender)
                         </td>
-                        <td class="nonclick">
+                        <td class="nonclick" id="stats">
                             @Html.DisplayFor(modelItem => item.emp_accountStatus)
                         </td>
                         <td>
                             <a class="btn btn-primary" href="@Url.Action("EditEmployee", "Home", new { emp_id = Html.DisplayFor(modelItem => item.emp_id) })"><span class="material-symbols-outlined">edit</span></a>
                         </td>
-                        <td><button type="button" class="btn btn-danger"><span class="material-symbols-outlined">delete</span></button></td>
+                        <td><button type="button" id="act" class="btn btn-danger" value="Active"><span class="material-symbols-outlined">toggle_off</span></button></td>
+                        <td><button type="button" id="inact" class="btn btn-success" value="Inactive"><span class="material-symbols-outlined">toggle_on</span></button></td>
                     </tr>
                 }
             </table>
         </div>
     </div>
+
+    <script type="text/javascript">
+        if ($('#stats').val() == 'Active') {
+            $("#act").prop("disabled", false);
+        } 
+    </script>
+
 </body>
 </html>
