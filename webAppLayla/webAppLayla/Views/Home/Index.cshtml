@@ -26,14 +26,13 @@
         <div class="card-body">
             <table class="table table-bordered border-primary table-striped table-hover">
                 <tr>
-                    <th>I:D</th>
+                    <th>ID</th>
                     <th>Last Name</th>
                     <th>First Name</th>
                     <th>Email</th>
                     <th>Gender</th>
                     <th>Status</th>
-                    <th scope="col" colspan="2" class="text-center"><button type="button" class="btn btn-primary"><span class="material-symbols-outlined">person_add</span></button></th>
-                </tr>
+                    <th scope="col" colspan="2" class="text-center"><a href="@Url.Action("AddEmployee", "Home")" class="btn btn-primary"><span class="material-symbols-outlined">person_add</span></a></th></tr>
                 @foreach (modHome item in Model.empList)
                 {
                     <tr>
@@ -55,7 +54,9 @@
                         <td class="nonclick">
                             @Html.DisplayFor(modelItem => item.emp_accountStatus)
                         </td>
-                        <td><button type="button" class="btn btn-success"><span class="material-symbols-outlined">edit</span></button></td>
+                        <td>
+                            <a class="btn btn-primary" href="@Url.Action("EditEmployee", "Home", new { emp_id = Html.DisplayFor(modelItem => item.emp_id) })"><span class="material-symbols-outlined">edit</span></a>
+                        </td>
                         <td><button type="button" class="btn btn-danger"><span class="material-symbols-outlined">delete</span></button></td>
                     </tr>
                 }
