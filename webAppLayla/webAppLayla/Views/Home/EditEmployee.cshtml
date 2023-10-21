@@ -34,11 +34,13 @@
         </div>
     </div>
 
+    <h1 class="justify-content-start"><a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary"><span class="material-symbols-outlined">first_page</span></a></h1>
+
     @foreach (modHome item in Model.empList)
     {
         <div class="position-absolute top-50 start-50 translate-middle w-50">
-            <h1 class="text-center"><span class="material-symbols-outlined">edit</span> Edit Details</h1>
             <div class="card shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+                <h1 class="text-center"><span class="material-symbols-outlined">edit</span> Edit Details</h1>
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col">

@@ -18,13 +18,14 @@
 </head>
 <body>
     <script src="~/Scripts/bootstrap.bundle.js"></script>
-    <h1 class="text-center"><span class="material-symbols-outlined">account_circle</span> Employee Details</h1>
+    <h1 class="justify-content-start"><a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary"><span class="material-symbols-outlined">first_page</span></a></h1>
+
     @foreach (modHome item in Model.empList)
     {
-        <section class="vh-100">
             <div class="container py-5 h-100">
                 <div class="row d-flex justify-content-center align-items-center h-100">
                     <div class="col col-lg-6 mb-4 mb-lg-0">
+                        <h1 class="text-center"><span class="material-symbols-outlined">account_circle</span> Employee Details</h1>
                         <div class="card mb-3 shadow bg-body-tertiary rounded" style="border-radius: .5rem;">
                             <div class="og row g-0">
                                 <div class="col-md-4 gradient-custom text-center text-white" style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
@@ -75,7 +76,6 @@
                     </div>
                 </div>
             </div>
-        </section>
     }
 </body>
 </html>

@@ -41,17 +41,21 @@
                     <h5 class="modal-title text-success">Success</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <div class="modal-body d-flex justify-content-center align-items-center">
+                    @Html.Label("Message", new { @id = "lblMessage1", @class = "text-break" })
+                </div>
                 <div class="modal-footer">
                     <button type="button" id="close-data1" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <h1 class="text-center"><span class="material-symbols-outlined">add</span> Add Employee</h1>
+    
+    <h1 class="justify-content-start"><a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary"><span class="material-symbols-outlined">first_page</span></a></h1>
 
     <div class="position-absolute top-50 start-50 translate-middle w-50">
         <div class="card shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+            <h1 class="text-center text-black"><span class="material-symbols-outlined text-black">add</span> Add Employee</h1>
             <div class="card-body">
                 <div class="row mb-2">
                     <div class="col">
@@ -145,7 +149,7 @@
                                                 success: function (data) {
                                                     if (data == 'Successfully Saved') {
                                                         $('#exampleModal1').modal('show');
-                                                        document.getElementById("lblMessage").innerHTML = 'Successfully Saved.';
+                                                        document.getElementById("lblMessage1").innerHTML = 'Successfully Saved.';
                                                         $('#post-data').prop("disabled", false);
                                                         $('#post-data').html("Submit");
                                                     } else {
