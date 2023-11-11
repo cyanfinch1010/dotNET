@@ -85,16 +85,16 @@
                     </select>
 
                     <div class="text-center">
-                        <button type="button" id="post-data" class="btn btn-success " data-action="put-data">Save</button>
+                        <button type="button" id="put-data" class="btn btn-success " data-action="put-data">Save</button>
                     </div>
                 </div>
             </div>
         </div>
     }
     <script type="text/javascript">
-        $('#post-data').click(function () {
-            $("#post-data").prop("disabled", true);
-            $("#post-data").html('Please wait...');
+        $('#put-data').click(function () {
+            $("#put-data").prop("disabled", true);
+            $("#put-data").html('Please wait...');
 
             $.ajax({
                 url: '@Url.Action("EditEmployee", "Home")',
@@ -114,13 +114,13 @@
                     if (data == 'Successfully Updated') {
                         $('#exampleModal').modal('show');
                         document.getElementById("lblMessage").innerHTML = 'Successfully Updated.';
-                        $('#post-data').prop("disabled", false);
-                        $('#post-data').html("Submit");
+                        $('#put-data').prop("disabled", false);
+                        $('#put-data').html("Submit");
                     } else {
                         $('#exampleModal').modal('show');
                         document.getElementById("lblMessage").innerHTML = data;
-                        $("#post-data").prop("disabled", false);
-                        $("#post-data").html('Save Employee');
+                        $("#put-data").prop("disabled", false);
+                        $("#put-data").html('Save Employee');
                     }
                 },
                 error: function (jqXHR, exception) {
@@ -134,8 +134,8 @@
         });
 
         $('#close-data').click(function () {
-            $("#post-data").prop("disabled", false);
-            $("#post-data").html('Submit');
+            $("#put-data").prop("disabled", false);
+            $("#put-data").html('Submit');
         });
     </script>
 

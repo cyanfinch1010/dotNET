@@ -1,0 +1,121 @@
+﻿@using webAppLayla.Models
+@model HomeModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ChangeStatus</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<body>
+    <script src="~/Scripts/bootstrap.bundle.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery-3.7.1.js"></script>
+
+    <div class="modal" tabindex="-1" id="exampleModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-secondary">Eyes Here!!</h5>
+                </div>
+                <div class="modal-body d-flex justify-content-center align-items-center">
+                    @Html.Label("Message", new { @id = "lblMessage", @class = "text-break" })
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="close-data" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="justify-content-start"><a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary"><span class="material-symbols-outlined">first_page</span></a></h1>
+
+    <div class="card position-absolute top-50 start-50 translate-middle shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+        <h1 class="text-center">
+            <span class="material-symbols-outlined">check_small</span> Employee Status
+        </h1>
+        <div class="card-body">
+            <table class="table table-bordered border-primary table-striped table-hover">
+                <tr>
+                    <th>ID</th>
+                    <th>Last Name</th>
+                    <th>First Name</th>
+                    <th>Status</th>
+                </tr>
+                @foreach (modHome item in Model.empList)
+                {
+                    <tr>
+                        <td>
+                          <input readonly class="form-control-plaintext" id="txtEmployeeID" placeholder="Employee ID" value="@Html.DisplayFor(modelItem => item.emp_id)" />
+                        </td>
+                        <td class="nonclick">
+                            @Html.DisplayFor(modelItem => item.emp_lastName)
+                        </td>
+                        <td class="nonclick">
+                            @Html.DisplayFor(modelItem => item.emp_firstName)
+                        </td>
+                        <td class="nonclick">
+                            <select class=" form-select w-100" aria-label="Large select example" id="txtStatus">
+                                <option selected>@Html.DisplayFor(modelItem => item.emp_accountStatus)</option>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </td>
+                    </tr>
+                }
+            </table>
+            <div class="text-center">
+                <button type="button" id="del-data" class="btn btn-success " data-action="del-data">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $('#del-data').click(function () {
+            $("#del-data").prop("disabled", true);
+            $("#del-data").html('Please wait...');
+
+            $.ajax({
+                url: '@Url.Action("ChangeStatus", "Home")',
+                data: {
+                    emp_id: $('#txtEmployeeID').val(),
+                    emp_accountStatus: $('#txtStatus').val()
+                },
+                dataType: 'text',
+                contentType: "application/x-www-form-urlencoded",
+                method: 'DELETE',
+                success: function (data) {
+                    if (data == 'Successfully Updated Status') {
+                        $('#exampleModal').modal('show');
+                        document.getElementById("lblMessage").innerHTML = 'Successfully Updated Status.';
+                        $('#del-data').prop("disabled", false);
+                        $('#del-data').html("Submit");
+                    } else {
+                        $('#exampleModal').modal('show');
+                        document.getElementById("lblMessage").innerHTML = data;
+                        $("#del-data").prop("disabled", false);
+                        $("#del-data").html('Submit');
+                    }
+                },
+                error: function (jqXHR, exception) {
+                    $('#modalMessage').modal('show');
+                    document.getElementById("lblMessage").innerHTML = jqXHR.responseText;
+                    $("#get-data").prop("disabled", false);
+                    $("#get-data").html('Update Profile');
+                }
+            });
+
+        });
+
+        $('#close-data').click(function () {
+            $("#del-data").prop("disabled", false);
+            $("#del-data").html('Submit');
+        });
+    </script>
+</body>
+</html>

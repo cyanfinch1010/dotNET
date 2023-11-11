@@ -214,5 +214,71 @@ namespace webAppLayla.Controllers
             }
         }
 
+
+        public ActionResult ChangeStatus()
+        {
+            HomeModel mymodel = new HomeModel();
+            mymodel.empList = GetEmployeeDetailsbyId();
+            return View("ChangeStatus", mymodel);
+        }
+        [HttpDelete]
+        public ActionResult ChangeStatus(modHome p)
+        {
+            try
+            {
+                string msg;
+                try
+                {
+                    WebRequest req;
+                    WebResponse res;
+                    string putData = "emp_id=" + p.emp_id
+                        + "&emp_accountStatus=" + p.emp_accountStatus;
+                    req = WebRequest.Create(ConfigurationManager.AppSettings["API_Path"] + "api/employee/switch?" + putData);
+                    Byte[] data = Encoding.UTF8.GetBytes(putData);
+                    req.Method = "DELETE";
+                    req.ContentType = "application/x-www-form-urlencoded; charset=UTF-8";
+                    req.ContentLength = data.Length;
+
+                    Stream stream = req.GetRequestStream();
+                    stream.Write(data, 0, data.Length);
+                    stream.Close();
+
+                    using (res = req.GetResponse())
+                    using (var reader = new StreamReader(res.GetResponseStream()))
+                    {
+                        msg = reader.ReadToEnd();
+                        int comVal = msg.CompareTo("Successfully Updated Status");
+                        if (comVal == 0)
+                        {
+                            return Content("Successfully Updated Status", "text/plain", Encoding.UTF8);
+                        }
+                        else
+                        {
+                            return Content(msg, "text/plain", Encoding.UTF8);
+                        }
+                    }
+                }
+                catch (WebException ex)
+                {
+                    HttpWebResponse res = (HttpWebResponse)ex.Response;
+                    Stream receiveStream = res.GetResponseStream();
+                    using (StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8))
+
+                    {
+                        return Content(readStream.ReadToEnd(), "text/plain", Encoding.UTF8);
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                HttpWebResponse res = (HttpWebResponse)ex.Response;
+                Stream receiveStream = res.GetResponseStream();
+                using (StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8))
+                {
+                    return Content(readStream.ReadToEnd(), "text/plain", Encoding.UTF8);
+                }
+            }
+        }
+
     }
 }

@@ -428,9 +428,11 @@ namespace estupidyante.Controllers
             }
         }
 
+        [HttpDelete]
         [Route("api/employee/switch", Name = "Employee_Switch_Status")]
         public HttpResponseMessage Employee_Switch_Status([FromUri] modEmployeeList p)
         {
+
             using (MySqlConnection SQLCON = new MySqlConnection(ConfigurationManager.ConnectionStrings["const"].ConnectionString))
             {
                 try
@@ -438,19 +440,37 @@ namespace estupidyante.Controllers
                     if (SQLCON.State == ConnectionState.Closed)
 
                     {
-
                         SQLCON.Open();
                         MySqlCommand sqlComm = new MySqlCommand();
                         sqlComm.Connection = SQLCON;
-
-                        sqlComm.CommandText = "UPDATE `employee` SET `emp_status` =  WHERE `emp_id` = @emp_id LIMIT 1";
-
+                        sqlComm.CommandText = "SELECT COUNT(*) FROM `disciplinepolicy`.`employee` WHERE `emp_id` = @emp_id";
                         sqlComm.Parameters.Add(new MySqlParameter("@emp_id", p.emp_id));
-                        sqlComm.ExecuteNonQuery(); //EXECUTE MYSQL QUEUE STRING
-                        response = Request.CreateResponse(HttpStatusCode.OK);
-                        response.Content = new StringContent("Successfully Removed");
 
-                        return response;
+                        int count = Convert.ToInt32(sqlComm.ExecuteScalar());
+                        SQLCON.Close();
+
+                        if (count == 1)
+                        {
+                            SQLCON.Open();
+                            sqlComm.Connection = SQLCON;
+
+                            sqlComm.CommandText = "UPDATE `employee` SET `emp_status` = @emp_accountStatus WHERE `emp_id` = @emp_id1 LIMIT 1";
+
+                            sqlComm.Parameters.Add(new MySqlParameter("@emp_accountStatus", p.emp_accountStatus));
+                            sqlComm.Parameters.Add(new MySqlParameter("@emp_id1", p.emp_id));
+                            sqlComm.ExecuteNonQuery(); //EXECUTE MYSQL QUEUE STRING
+                            response = Request.CreateResponse(HttpStatusCode.OK);
+                            response.Content = new StringContent("Successfully Updated Status");
+
+                            return response;
+                        }
+                        else
+                        {
+                            response = Request.CreateResponse(HttpStatusCode.BadRequest);
+                            response.Content = new StringContent("User Not Found.");
+                            return response;
+                        }
+
                     }
                     else
                     {
