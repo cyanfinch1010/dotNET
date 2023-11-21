@@ -50,12 +50,25 @@
             </div>
         </div>
     </div>
-    
-    <h1 class="justify-content-start"><a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary"><span class="material-symbols-outlined">first_page</span></a></h1>
+
+    <div class="modal" tabindex="-1" id="exampleModal2">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-primary">Please wait.</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex justify-content-center align-items-center">
+                    @Html.Label("Message", new { @id = "lblMessage2", @class = "text-break" })
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="position-absolute top-50 start-50 translate-middle w-50">
+        <h1 class="justify-content-start btn btn-primary" id="back-to-login"><span class="material-symbols-outlined">arrow_back </span>Back to Login</h1>
         <div class="card shadow-lg p-3 mb-5 bg-body-tertiary rounded">
-            <h1 class="text-center text-black"><span class="material-symbols-outlined text-black">add</span> Add Employee</h1>
+            <h1 class="text-center text-black">Sign up</h1>
             <div class="card-body">
                 <div class="row mb-2">
                     <div class="col">
@@ -179,9 +192,19 @@
             $("#post-data").prop("disabled", false);
             $("#post-data").html('Submit');
         });
+
         $('#close-data1').click(function () {
             $("#post-data").prop("disabled", false);
             $("#post-data").html('Submit');
+        });
+
+        $('#back-to-login').click(function () {
+            var delay = 1000;
+            $('#exampleModal2').modal('show');
+            document.getElementById("lblMessage2").innerHTML = 'Redirecting...';
+            setTimeout(function () {
+                window.location.href = "@Url.Action("Login", "Home")";
+            }, delay);
         });
     </script>
 

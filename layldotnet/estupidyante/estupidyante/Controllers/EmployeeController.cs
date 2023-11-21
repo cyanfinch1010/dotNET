@@ -45,72 +45,71 @@ namespace estupidyante.Controllers
 
 
 
-        //[HttpGet]
-        //[Route("api/employee/account/login", Name = "Get_Employee_Login")]
-        //public HttpResponseMessage Get_Employee_Login(string username, string userpassword, int emp_id)
-        //{
+        [HttpPost]
+        [Route("api/employee/account/login", Name = "Get_Employee_Login")]
+        public HttpResponseMessage Get_Employee_Login([FromUri] modEmployeeList p)
+        {
 
-        //    using (MySqlConnection SQLCON = new MySqlConnection(ConfigurationManager.ConnectionStrings["const"].ConnectionString))
-        //    {
-        //        try
-        //        {
-        //            if (SQLCON.State == ConnectionState.Closed)
-        //            {
-        //                SQLCON.Open();
-        //                MySqlCommand sqlComm = new MySqlCommand();
-        //                sqlComm.Connection = SQLCON;
-        //                sqlComm.CommandText = "SELECT COUNT(*) FROM `disciplinepolicy`.`employee` WHERE `emp_Username` = @emp_Username AND `emp_Userpassword` = @emp_Userpassword AND `emp_id` = @emp_id";
-        //                sqlComm.Parameters.Add(new MySqlParameter("@emp_Username", username));
-        //                sqlComm.Parameters.Add(new MySqlParameter("@emp_Userpassword", userpassword));
-        //                sqlComm.Parameters.Add(new MySqlParameter("@emp_id", emp_id));
+            using (MySqlConnection SQLCON = new MySqlConnection(ConfigurationManager.ConnectionStrings["const"].ConnectionString))
+            {
+                try
+                {
+                    if (SQLCON.State == ConnectionState.Closed)
+                    {   
+                        SQLCON.Open();
+                        MySqlCommand sqlComm = new MySqlCommand();
+                        sqlComm.Connection = SQLCON;
+                        sqlComm.CommandText = "CALL Login(@emp_Username, @emp_Userpassword)";
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_Username", p.emp_Username));
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_Userpassword", p.emp_Userpassword));
 
-        //                int count = Convert.ToInt32(sqlComm.ExecuteScalar());
-        //                SQLCON.Close();
+                        int count = Convert.ToInt32(sqlComm.ExecuteScalar());
+                        SQLCON.Close();
 
-        //                if (count == 1)
-        //                {
-        //                    SQLCON.Open();
-        //                    DateTime now = DateTime.Now;
-        //                    string loginDate = now.ToString("yyyy-MM-dd");
-        //                    string loginTime = now.ToString("HH:mm:ss");
-        //                    sqlComm.CommandText = "INSERT INTO `disciplinepolicy`.`login_logs`(`emp_id`, `login_date`, `login_time`) VALUES(@emp_id1, @login_date, @login_time)";
-        //                    sqlComm.Parameters.Add(new MySqlParameter("@emp_id1", emp_id));
-        //                    sqlComm.Parameters.Add(new MySqlParameter("@login_date", loginDate));
-        //                    sqlComm.Parameters.Add(new MySqlParameter("@login_time", loginTime));
-        //                    sqlComm.ExecuteNonQuery();
+                        if (count == 1)
+                        {
+                            SQLCON.Open();
+                            DateTime now = DateTime.Now;
+                            string loginDate = now.ToString("yyyy-MM-dd");
+                            string loginTime = now.ToString("HH:mm:ss");
+                            sqlComm.CommandText = "CALL loginlogs(@emp_Username1, @login_date, @login_time)";
+                            sqlComm.Parameters.Add(new MySqlParameter("@emp_Username1", p.emp_Username));
+                            sqlComm.Parameters.Add(new MySqlParameter("@login_date", loginDate));
+                            sqlComm.Parameters.Add(new MySqlParameter("@login_time", loginTime));
+                            sqlComm.ExecuteNonQuery();
 
-        //                    response = Request.CreateResponse(HttpStatusCode.OK);
-        //                    response.Content = new StringContent("Login Successful");
-        //                    return response;
-        //                }
-        //                else
-        //                {
-        //                    response = Request.CreateResponse(HttpStatusCode.BadRequest);
-        //                    response.Content = new StringContent("Login Failed.");
-        //                    return response;
-        //                }
+                            response = Request.CreateResponse(HttpStatusCode.OK);
+                            response.Content = new StringContent("Successfully Logged in");
+                            return response;
+                        }
+                        else
+                        {
+                            response = Request.CreateResponse(HttpStatusCode.BadRequest);
+                            response.Content = new StringContent("Incorrect Username or Password");
+                            return response;
+                        }
 
-        //            }
-        //            else
-        //            {
-        //                response = Request.CreateResponse(HttpStatusCode.InternalServerError);
-        //                response.Content = new StringContent("Unable to connect to the database server", Encoding.UTF8);
-        //                return response;
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            response = Request.CreateResponse(HttpStatusCode.OK);
-        //            response.Content = new StringContent(ex.ToString(), Encoding.UTF8);
-        //            return response;
-        //        }
-        //        finally
-        //        {
-        //            SQLCON.Close();
-        //            SQLCON.Dispose();
-        //        }
-        //    }
-        //}
+                    }
+                    else
+                    {
+                        response = Request.CreateResponse(HttpStatusCode.InternalServerError);
+                        response.Content = new StringContent("Unable to connect to the database server", Encoding.UTF8);
+                        return response;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.OK);
+                    response.Content = new StringContent(ex.ToString(), Encoding.UTF8);
+                    return response;
+                }
+                finally
+                {
+                    SQLCON.Close();
+                    SQLCON.Dispose();
+                }
+            }
+        }
 
         //[Route("api/employee/list", Name = "Get_Employee_List")]
         //public HttpResponseMessage Get_Employee_List()

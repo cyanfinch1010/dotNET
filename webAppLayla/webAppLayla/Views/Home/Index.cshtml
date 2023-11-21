@@ -17,55 +17,77 @@
 </head>
 <body>
     <script src="~/Scripts/bootstrap.bundle.js" type="text/javascript"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
 
-    <div class="card position-absolute top-50 start-50 translate-middle shadow-lg p-3 mb-5 bg-body-tertiary rounded">
-        <h1 class="text-center">
-            <span class="material-symbols-outlined">
-                groups
-            </span> Employee List
-        </h1>
-        <div class="card-body">
-            <table class="table table-bordered border-primary table-striped table-hover">
-                <tr>
-                    <th>ID</th>
-                    <th>Last Name</th>
-                    <th>First Name</th>
-                    <th>Email</th>
-                    <th>Gender</th>
-                    <th>Status</th>
-                    <th><a href="@Url.Action("AddEmployee", "Home")" class="btn btn-primary"><span class="material-symbols-outlined">person_add</span></a></th>
-                    <th class="text-center">Change Status</th>
-                </tr>
-                @foreach (modHome item in Model.empList)
-                {
+    <div class="modal" tabindex="-1" id="exampleModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-warning">Warning</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex justify-content-center align-items-center">
+                    <p>Are you sure you want to sign out?</p>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-success" href="@Url.Action("Login", "Home")">Yes</a>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="position-absolute top-50 start-50 translate-middle">
+        <h1 class="justify-content-start btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><span class="material-symbols-outlined">logout </span>Logout</h1>
+        <div class="card shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+            <h1 class="text-center">
+                <span class="material-symbols-outlined">
+                    groups
+                </span> Employee List
+            </h1>
+            <div class="card-body">
+                <table class="table table-bordered border-primary table-striped table-hover">
                     <tr>
-                        <td id="hover1">
-                            <a class="btn btn-outline-primary" href="@Url.Action("EmployeeDetails", "Home", new { emp_id = Html.DisplayFor(modelItem => item.emp_id) })">@Html.DisplayFor(modelItem => item.emp_id)</a>
-                        </td>
-                        <td class="nonclick">
-                            @Html.DisplayFor(modelItem => item.emp_lastName)
-                        </td>
-                        <td class="nonclick">
-                            @Html.DisplayFor(modelItem => item.emp_firstName)
-                        </td>
-                        <td class="nonclick">
-                            @Html.DisplayFor(modelItem => item.emp_email)
-                        </td>
-                        <td class="nonclick">
-                            @Html.DisplayFor(modelItem => item.emp_gender)
-                        </td>
-                        <td class="nonclick">
-                            @Html.DisplayFor(modelItem => item.emp_accountStatus)
-                        </td>
-                        <td id="layl">
-                            <a class="btn btn-primary" href="@Url.Action("EditEmployee", "Home", new { emp_id = Html.DisplayFor(modelItem => item.emp_id) })"><span class="material-symbols-outlined">edit</span></a>
-                        </td>
-                        <td class="text-center">
-                            <a class="btn btn-outline-secondary" href="@Url.Action("ChangeStatus", "Home", new { emp_id = Html.DisplayFor(modelItem => item.emp_id) })"><span class="material-symbols-outlined">change_circle</span></a>
-                        </td>
+                        <th>ID</th>
+                        <th>Last Name</th>
+                        <th>First Name</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>Status</th>
+                        <th><a href="@Url.Action("AddEmployee", "Home")" class="btn btn-primary"><span class="material-symbols-outlined">person_add</span></a></th>
+                        <th class="text-center">Change Status</th>
                     </tr>
-                }
-            </table>
+                    @foreach (modHome item in Model.empList)
+                    {
+                        <tr>
+                            <td id="hover1">
+                                <a class="btn btn-outline-primary" href="@Url.Action("EmployeeDetails", "Home", new { emp_id = Html.DisplayFor(modelItem => item.emp_id) })">@Html.DisplayFor(modelItem => item.emp_id)</a>
+                            </td>
+                            <td class="nonclick">
+                                @Html.DisplayFor(modelItem => item.emp_lastName)
+                            </td>
+                            <td class="nonclick">
+                                @Html.DisplayFor(modelItem => item.emp_firstName)
+                            </td>
+                            <td class="nonclick">
+                                @Html.DisplayFor(modelItem => item.emp_email)
+                            </td>
+                            <td class="nonclick">
+                                @Html.DisplayFor(modelItem => item.emp_gender)
+                            </td>
+                            <td class="nonclick">
+                                @Html.DisplayFor(modelItem => item.emp_accountStatus)
+                            </td>
+                            <td id="layl">
+                                <a class="btn btn-primary" href="@Url.Action("EditEmployee", "Home", new { emp_id = Html.DisplayFor(modelItem => item.emp_id) })"><span class="material-symbols-outlined">edit</span></a>
+                            </td>
+                            <td class="text-center">
+                                <a class="btn btn-outline-secondary" href="@Url.Action("ChangeStatus", "Home", new { emp_id = Html.DisplayFor(modelItem => item.emp_id) })"><span class="material-symbols-outlined">change_circle</span></a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
         </div>
     </div>
 </body>

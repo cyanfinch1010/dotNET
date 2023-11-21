@@ -1,0 +1,165 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <link href="~/Content/login.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body>
+    <script src="~/Scripts/bootstrap.bundle.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery-3.7.1.js"></script>
+
+    <div class="modal" tabindex="-1" id="exampleModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-success">Succeed.</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex justify-content-center align-items-center">
+                    @Html.Label("Message", new { @id = "lblMessage", @class = "text-break" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" id="exampleModal1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger">Failed to proceed.</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex justify-content-center align-items-center">
+                    @Html.Label("Message", new { @id = "lblMessage1", @class = "text-break" })
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="close-data1" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" id="exampleModal2">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-primary">Please wait.</h5>
+                </div>
+                <div class="modal-body d-flex justify-content-center align-items-center">
+                    @Html.Label("Message", new { @id = "lblMessage2", @class = "text-break" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card w-25 position-absolute top-50 start-50 translate-middle shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+        <div class="text-center"><h1>Sign in</h1></div>
+        <div class="card-body">
+            <form>
+                <div class="form-outline mb-1">
+                    <input type="text" id="txtUsername" class="form-control" />
+                    <label class="form-label" for="loginName">Username</label>
+                </div>
+                <div class="form-outline mb-1">
+                    <input type="password" id="txtUserpassword" class="form-control" />
+                    <label class="form-label" for="loginPassword">Password</label>
+                </div>
+                <div class="text-center">
+                    <button type="submit" id="post-data" class="btn btn-primary btn-block" data-action="post-data">Log in</button>
+                </div>
+                <div class="text-center mt-2">
+                    <a class="btn btn-outline-warning" id="forgot-password">Forgot password?</a>
+                </div>
+
+                <hr class="my-4" />
+
+                <div class="text-center mt-4">
+                    <p>Don't have an account? <a class="btn btn-outline-success" id="create-data">Create new account</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $('#post-data').click(function () {
+            var delay = 1000;
+            $("#post-data").prop("disabled", true);
+            $("#post-data").html('Please wait...');
+
+            if ($('#txtUsername').val() == '') {
+                $('#exampleModal1').modal('show');
+                document.getElementById("lblMessage1").innerHTML = 'Username required.';
+            } else {
+                if ($('#txtUserpassword').val() == '') {
+                    $('#exampleModal1').modal('show');
+                    document.getElementById("lblMessage1").innerHTML = 'Password required.';
+                } else {
+                    $.ajax({
+                        url: '@Url.Action("Login", "Home")',
+                        data: {
+                            emp_Username: $('#txtUsername').val(),
+                            emp_Userpassword: $('#txtUserpassword').val()
+                        },
+                        dataType: 'text',
+                        contentType: "application/x-www-form-urlencoded",
+                        method: 'POST',
+                        success: function (data) {
+                            if (data == 'Successfully Logged in') {
+                                $('#exampleModal').modal('show');
+                                document.getElementById("lblMessage").innerHTML = 'Successfully Logged in.';
+                                $('#post-data').prop("disabled", false);
+                                $('#post-data').html("Login");
+                                setTimeout(function () {
+                                    window.location.href = "@Url.Action("Index", "Home")";
+                                }, delay);
+                            } else {
+                                $('#exampleModal1').modal('show');
+                                document.getElementById("lblMessage1").innerHTML = data;
+                                $("#post-data").prop("disabled", false);
+                                $("#post-data").html('Login');
+                            }
+                        },
+                        error: function (jqXHR, exception) {
+                            $('#modalMessage').modal('show');
+                            document.getElementById("lblMessage1").innerHTML = jqXHR.responseText;
+                            $("#get-data").prop("disabled", false);
+                            $("#get-data").html('Update Profile');
+                        }
+                    });
+                }
+            }
+        });
+
+        $('#close-data1').click(function () {
+            $('#txtUsername').trigger('reset');
+            $('#txtUserpassword').trigger('reset');
+            $("#post-data").prop("disabled", false);
+            $("#post-data").html('Login');
+        });
+
+        $('#create-data').click(function () {
+            var delay = 1000;
+            $('#exampleModal2').modal('show');
+            document.getElementById("lblMessage2").innerHTML = 'Redirecting...';
+            setTimeout(function () {
+                window.location.href = "@Url.Action("AddEmployee", "Home")";
+            }, delay);
+        });
+
+        $('#forgot-password').click(function () {
+            $('#exampleModal1').modal('show');
+            document.getElementById("lblMessage1").innerHTML = 'Feature available soon.';
+        });
+    </script>
+
+</body>
+</html>

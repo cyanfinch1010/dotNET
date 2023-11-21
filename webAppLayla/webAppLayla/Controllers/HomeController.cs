@@ -214,7 +214,6 @@ namespace webAppLayla.Controllers
             }
         }
 
-
         public ActionResult ChangeStatus()
         {
             HomeModel mymodel = new HomeModel();
@@ -280,5 +279,67 @@ namespace webAppLayla.Controllers
             }
         }
 
+        public ActionResult Login()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Login(modHome p)
+        {
+            try
+            {
+                string msg;
+                try
+                {
+                    WebRequest req;
+                    WebResponse res;
+                    string postData = "&emp_Username=" + p.emp_Username
+                        + "&emp_Userpassword=" + p.emp_Userpassword;
+                    req = WebRequest.Create(ConfigurationManager.AppSettings["API_Path"] + "api/employee/account/login?" + postData);
+                    Byte[] data = Encoding.UTF8.GetBytes(postData);
+                    req.Method = "POST";
+                    req.ContentType = "application/x-www-form-urlencoded; charset=UTF-8";
+                    req.ContentLength = data.Length;
+
+                    Stream stream = req.GetRequestStream();
+                    stream.Write(data, 0, data.Length);
+                    stream.Close();
+
+                    using (res = req.GetResponse())
+                    using (var reader = new StreamReader(res.GetResponseStream()))
+                    {
+                        msg = reader.ReadToEnd();
+                        int comVal = msg.CompareTo("Successfully Logged in");
+                        if (comVal == 0)
+                        {
+                            return Content("Successfully Logged in", "text/plain", Encoding.UTF8);
+                        }
+                        else
+                        {
+                            return Content(msg, "text/plain", Encoding.UTF8);
+                        }
+                    }
+                }
+                catch (WebException ex)
+                {
+                    HttpWebResponse res = (HttpWebResponse)ex.Response;
+                    Stream receiveStream = res.GetResponseStream();
+                    using (StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8))
+
+                    {
+                        return Content(readStream.ReadToEnd(), "text/plain", Encoding.UTF8);
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                HttpWebResponse res = (HttpWebResponse)ex.Response;
+                Stream receiveStream = res.GetResponseStream();
+                using (StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8))
+                {
+                    return Content(readStream.ReadToEnd(), "text/plain", Encoding.UTF8);
+                }
+            }
+        }
     }
 }
