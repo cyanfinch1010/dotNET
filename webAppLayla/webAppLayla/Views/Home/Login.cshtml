@@ -63,17 +63,19 @@
 
     <div class="card w-25 position-absolute top-50 start-50 translate-middle shadow-lg p-3 mb-5 bg-body-tertiary rounded">
         <div class="text-center"><h1>Sign in</h1></div>
+        <hr class="my-4" />
+
         <div class="card-body">
             <form>
-                <div class="form-outline mb-1">
-                    <input type="text" id="txtUsername" class="form-control" />
-                    <label class="form-label" for="loginName">Username</label>
+                <div class="form-outline text-center">
+                    <label class="form-label" for="txtUserpassword">Username</label>
+                    <input type="text" id="txtUsername" class="form-control text-center" />
                 </div>
-                <div class="form-outline mb-1">
-                    <input type="password" id="txtUserpassword" class="form-control" />
-                    <label class="form-label" for="loginPassword">Password</label>
+                <div class="form-outline text-center">
+                    <label class="form-label" for="txtUserpassword">Password</label>
+                    <input type="password" id="txtUserpassword" class="form-control text-center" />
                 </div>
-                <div class="text-center">
+                <div class="text-center mt-2">
                     <button type="submit" id="post-data" class="btn btn-primary btn-block" data-action="post-data">Log in</button>
                 </div>
                 <div class="text-center mt-2">

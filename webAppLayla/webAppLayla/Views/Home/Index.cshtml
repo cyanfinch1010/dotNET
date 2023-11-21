@@ -37,8 +37,22 @@
         </div>
     </div>
 
+    <div class="modal" tabindex="-1" id="exampleModal1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-warning">Note.</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex justify-content-center align-items-center">
+                    <p>Feature available soon.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="float-end btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><span class="material-symbols-outlined">logout </span>Logout</h1>
     <div class="position-absolute top-50 start-50 translate-middle">
-        <h1 class="justify-content-start btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><span class="material-symbols-outlined">logout </span>Logout</h1>
         <div class="card shadow-lg p-3 mb-5 bg-body-tertiary rounded">
             <h1 class="text-center">
                 <span class="material-symbols-outlined">
@@ -54,7 +68,7 @@
                         <th>Email</th>
                         <th>Gender</th>
                         <th>Status</th>
-                        <th><a href="@Url.Action("AddEmployee", "Home")" class="btn btn-primary"><span class="material-symbols-outlined">person_add</span></a></th>
+                        <th><a href="#!" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1"><span class="material-symbols-outlined">person_add</span></a></th>
                         <th class="text-center">Change Status</th>
                     </tr>
                     @foreach (modHome item in Model.empList)
