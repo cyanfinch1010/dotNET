@@ -45,72 +45,71 @@ namespace estupidyante.Controllers
 
 
 
-        //[HttpGet]
-        //[Route("api/employee/account/login", Name = "Get_Employee_Login")]
-        //public HttpResponseMessage Get_Employee_Login(string username, string userpassword, int emp_id)
-        //{
+        [HttpPost]
+        [Route("api/employee/account/login", Name = "Get_Employee_Login")]
+        public HttpResponseMessage Get_Employee_Login([FromUri] modEmployeeList p)
+        {
 
-        //    using (MySqlConnection SQLCON = new MySqlConnection(ConfigurationManager.ConnectionStrings["const"].ConnectionString))
-        //    {
-        //        try
-        //        {
-        //            if (SQLCON.State == ConnectionState.Closed)
-        //            {
-        //                SQLCON.Open();
-        //                MySqlCommand sqlComm = new MySqlCommand();
-        //                sqlComm.Connection = SQLCON;
-        //                sqlComm.CommandText = "SELECT COUNT(*) FROM `disciplinepolicy`.`employee` WHERE `emp_Username` = @emp_Username AND `emp_Userpassword` = @emp_Userpassword AND `emp_id` = @emp_id";
-        //                sqlComm.Parameters.Add(new MySqlParameter("@emp_Username", username));
-        //                sqlComm.Parameters.Add(new MySqlParameter("@emp_Userpassword", userpassword));
-        //                sqlComm.Parameters.Add(new MySqlParameter("@emp_id", emp_id));
+            using (MySqlConnection SQLCON = new MySqlConnection(ConfigurationManager.ConnectionStrings["const"].ConnectionString))
+            {
+                try
+                {
+                    if (SQLCON.State == ConnectionState.Closed)
+                    {   
+                        SQLCON.Open();
+                        MySqlCommand sqlComm = new MySqlCommand();
+                        sqlComm.Connection = SQLCON;
+                        sqlComm.CommandText = "CALL Login(@emp_Username, @emp_Userpassword)";
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_Username", p.emp_Username));
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_Userpassword", p.emp_Userpassword));
 
-        //                int count = Convert.ToInt32(sqlComm.ExecuteScalar());
-        //                SQLCON.Close();
+                        int count = Convert.ToInt32(sqlComm.ExecuteScalar());
+                        SQLCON.Close();
 
-        //                if (count == 1)
-        //                {
-        //                    SQLCON.Open();
-        //                    DateTime now = DateTime.Now;
-        //                    string loginDate = now.ToString("yyyy-MM-dd");
-        //                    string loginTime = now.ToString("HH:mm:ss");
-        //                    sqlComm.CommandText = "INSERT INTO `disciplinepolicy`.`login_logs`(`emp_id`, `login_date`, `login_time`) VALUES(@emp_id1, @login_date, @login_time)";
-        //                    sqlComm.Parameters.Add(new MySqlParameter("@emp_id1", emp_id));
-        //                    sqlComm.Parameters.Add(new MySqlParameter("@login_date", loginDate));
-        //                    sqlComm.Parameters.Add(new MySqlParameter("@login_time", loginTime));
-        //                    sqlComm.ExecuteNonQuery();
+                        if (count == 1)
+                        {
+                            SQLCON.Open();
+                            DateTime now = DateTime.Now;
+                            string loginDate = now.ToString("yyyy-MM-dd");
+                            string loginTime = now.ToString("HH:mm:ss");
+                            sqlComm.CommandText = "CALL loginlogs(@emp_Username1, @login_date, @login_time)";
+                            sqlComm.Parameters.Add(new MySqlParameter("@emp_Username1", p.emp_Username));
+                            sqlComm.Parameters.Add(new MySqlParameter("@login_date", loginDate));
+                            sqlComm.Parameters.Add(new MySqlParameter("@login_time", loginTime));
+                            sqlComm.ExecuteNonQuery();
 
-        //                    response = Request.CreateResponse(HttpStatusCode.OK);
-        //                    response.Content = new StringContent("Login Successful");
-        //                    return response;
-        //                }
-        //                else
-        //                {
-        //                    response = Request.CreateResponse(HttpStatusCode.BadRequest);
-        //                    response.Content = new StringContent("Login Failed.");
-        //                    return response;
-        //                }
+                            response = Request.CreateResponse(HttpStatusCode.OK);
+                            response.Content = new StringContent("Successfully Logged in");
+                            return response;
+                        }
+                        else
+                        {
+                            response = Request.CreateResponse(HttpStatusCode.BadRequest);
+                            response.Content = new StringContent("Incorrect Username or Password");
+                            return response;
+                        }
 
-        //            }
-        //            else
-        //            {
-        //                response = Request.CreateResponse(HttpStatusCode.InternalServerError);
-        //                response.Content = new StringContent("Unable to connect to the database server", Encoding.UTF8);
-        //                return response;
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            response = Request.CreateResponse(HttpStatusCode.OK);
-        //            response.Content = new StringContent(ex.ToString(), Encoding.UTF8);
-        //            return response;
-        //        }
-        //        finally
-        //        {
-        //            SQLCON.Close();
-        //            SQLCON.Dispose();
-        //        }
-        //    }
-        //}
+                    }
+                    else
+                    {
+                        response = Request.CreateResponse(HttpStatusCode.InternalServerError);
+                        response.Content = new StringContent("Unable to connect to the database server", Encoding.UTF8);
+                        return response;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.OK);
+                    response.Content = new StringContent(ex.ToString(), Encoding.UTF8);
+                    return response;
+                }
+                finally
+                {
+                    SQLCON.Close();
+                    SQLCON.Dispose();
+                }
+            }
+        }
 
         //[Route("api/employee/list", Name = "Get_Employee_List")]
         //public HttpResponseMessage Get_Employee_List()
@@ -170,7 +169,7 @@ namespace estupidyante.Controllers
         //    }
         //}
 
-
+        [HttpGet]
         [Route("api/employee/list", Name = "Get_Employee_List")]
         public IHttpActionResult Get_Employee_List()
         {
@@ -202,8 +201,6 @@ namespace estupidyante.Controllers
                                         dataObj.emp_firstName = dtReader["emp_first_name"].ToString();
                                         dataObj.emp_email = dtReader["emp_email"].ToString();
                                         dataObj.emp_gender = dtReader["emp_gender"].ToString();
-                                        dataObj.emp_Username = dtReader["emp_Username"].ToString();
-                                        dataObj.emp_Userpassword = dtReader["emp_Userpassword"].ToString();
                                         dataObj.emp_accountStatus = dtReader["emp_status"].ToString();
 
                                         stats.Add(dataObj);
@@ -234,7 +231,8 @@ namespace estupidyante.Controllers
                 }
             }
         }
-            
+
+        [HttpGet]  
         [Route("api/employee/details", Name = "Get_Employee_Details")]
         public IHttpActionResult Get_Employee_Details(string emp_id)
         {
@@ -312,168 +310,193 @@ namespace estupidyante.Controllers
             public string emp_accountStatus { get; set; }
         }
 
+        [HttpPost]
+        [Route("api/employee/add", Name = "Post_Employee_Add")]
+        public HttpResponseMessage Post_Employee_Add([FromUri] modEmployeeList p)
+        {
+            using (MySqlConnection SQLCON = new MySqlConnection(ConfigurationManager.ConnectionStrings["const"].ConnectionString))
+            {
+                try
+                {
+                    if (SQLCON.State == ConnectionState.Closed)
 
+                    {
+                        SQLCON.Open();
 
+                        MySqlCommand sqlComm = new MySqlCommand();
 
-        //[Route("api/employee/add", Name = "Post_Employee_Add")]
-        //public HttpResponseMessage Post_Employee_Add(string emp_id, string last_name, string first_name, string username, string userpassword)
-        //{
-        //    using (MySqlConnection SQLCON = new MySqlConnection(ConfigurationManager.ConnectionStrings["const"].ConnectionString))
-        //    {
-        //        try
-        //        {
-        //            if (SQLCON.State == ConnectionState.Closed)
+                        sqlComm.Connection = SQLCON;
 
-        //            {
+                        sqlComm.CommandText = "INSERT INTO `disciplinepolicy`.`employee`(`emp_id`, `emp_last_name`, `emp_first_name`, `emp_email`, `emp_gender`, `emp_Username`, `emp_Userpassword`, `emp_status`) VALUES(@emp_id, @emp_last_name, @emp_first_name, @emp_email, @emp_gender, @emp_Username, @emp_Userpassword, 'Active')";
 
-        //                SQLCON.Open();
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_id", p.emp_id));
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_last_name", p.emp_lastName));
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_first_name", p.emp_firstName));
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_email", p.emp_email));
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_gender", p.emp_gender));
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_Username", p.emp_Username));
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_Userpassword", p.emp_Userpassword));
+                        sqlComm.ExecuteNonQuery(); //EXECUTE MYSQL QUEUE STRING
+                        response = Request.CreateResponse(HttpStatusCode.OK);
+                        response.Content = new StringContent("Successfully Saved");
 
-        //                MySqlCommand sqlComm = new MySqlCommand();
+                        return response;
+                    }
+                    else
+                    {
 
-        //                sqlComm.Connection = SQLCON;
+                        response = Request.CreateResponse(HttpStatusCode.InternalServerError);
 
-        //                sqlComm.CommandText = "INSERT INTO `disciplinepolicy`.`employee`(`emp_id`, `emp_last_name`, `emp_first_name`, `emp_Username`, `emp_Userpassword`, `emp_status`) VALUES (@emp_id, @emp_last_name, @emp_first_name, @emp_Username, @emp_Userpassword, 1)";
+                        response.Content = new StringContent("Unable to connect to the database server", Encoding.UTF8);
 
-        //                sqlComm.Parameters.Add(new MySqlParameter("@emp_id", emp_id));
-        //                sqlComm.Parameters.Add(new MySqlParameter("@emp_last_name", last_name));
-        //                sqlComm.Parameters.Add(new MySqlParameter("@emp_first_name", first_name));
-        //                sqlComm.Parameters.Add(new MySqlParameter("@emp_Username", username));
-        //                sqlComm.Parameters.Add(new MySqlParameter("@emp_Userpassword", userpassword));
-        //                sqlComm.ExecuteNonQuery(); //EXECUTE MYSQL QUEUE STRING
-        //                response = Request.CreateResponse(HttpStatusCode.OK);
-        //                response.Content = new StringContent("Successfully Saved");
+                        return response;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.InternalServerError);
 
-        //                return response;
-        //            }
-        //            else
-        //            {
+                    response.Content = new StringContent("There is an error in performing this action: " + ex.ToString(), Encoding.Unicode);
 
-        //                response = Request.CreateResponse(HttpStatusCode.InternalServerError);
+                    return response;
+                }
+                finally //ALWAYS CLOSE AND DISPOSE THE CONNECTION AFTER USING
+                {
+                    SQLCON.Close();
+                    SQLCON.Dispose();
 
-        //                response.Content = new StringContent("Unable to connect to the database server", Encoding.UTF8);
+                }
+            }
+        }
 
-        //                return response;
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            response = Request.CreateResponse(HttpStatusCode.InternalServerError);
+        [HttpPut]
+        [Route("api/employee/update", Name = "Put_Employee_Update_Details")]
+        public HttpResponseMessage Put_Employee_Update_Details([FromUri] modEmployeeList p)
+        {
+            using (MySqlConnection SQLCON = new MySqlConnection(ConfigurationManager.ConnectionStrings["const"].ConnectionString))
+            {
+                try
+                {
+                    if (SQLCON.State == ConnectionState.Closed)
+                    {
+                        SQLCON.Open();
 
-        //            response.Content = new StringContent("There is an error in performing this action: " + ex.ToString(), Encoding.Unicode);
+                        MySqlCommand sqlComm = new MySqlCommand();
 
-        //            return response;
-        //        }
-        //        finally //ALWAYS CLOSE AND DISPOSE THE CONNECTION AFTER USING
-        //        {
-        //            SQLCON.Close();
-        //            SQLCON.Dispose();
+                        sqlComm.Connection = SQLCON;
 
-        //        }
-        //    }
-        //}
+                        sqlComm.CommandText = "UPDATE `employee` SET `emp_last_name` = @emp_last_name, `emp_first_name` = @emp_first_name, `emp_email` = @emp_email, `emp_gender` = @emp_gender, `emp_Username` = @emp_Username, `emp_Userpassword` = @emp_Userpassword WHERE `emp_id` = @emp_id LIMIT 1";
 
-        //[Route("api/employee/updatepass", Name = "Put_Employee_Update_Passoword")]
-        //public HttpResponseMessage Put_Employee_Update_Passoword(string emp_id, string userpassword)
-        //{
-        //    using (MySqlConnection SQLCON = new MySqlConnection(ConfigurationManager.ConnectionStrings["const"].ConnectionString))
-        //    {
-        //        try
-        //        {
-        //            if (SQLCON.State == ConnectionState.Closed)
-        //            {
-        //                SQLCON.Open();
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_id", p.emp_id));
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_last_name", p.emp_lastName));
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_first_name", p.emp_firstName));
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_email", p.emp_email));
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_gender", p.emp_gender));
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_Username", p.emp_Username));
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_Userpassword", p.emp_Userpassword));
+                        sqlComm.ExecuteNonQuery(); //EXECUTE MYSQL QUEUE STRING
+                        response = Request.CreateResponse(HttpStatusCode.OK);
+                        response.Content = new StringContent("Successfully Updated");
 
-        //                MySqlCommand sqlComm = new MySqlCommand();
+                        return response;
+                    }
+                    else
+                    {
 
-        //                sqlComm.Connection = SQLCON;
+                        response = Request.CreateResponse(HttpStatusCode.InternalServerError);
 
-        //                sqlComm.CommandText = "UPDATE `employee` SET `emp_Userpassword` = @emp_Userpassword WHERE `emp_id` = @emp_id LIMIT 1";
+                        response.Content = new StringContent("Unable to connect to the database server", Encoding.UTF8);
 
-        //                sqlComm.Parameters.Add(new MySqlParameter("@emp_id", emp_id));
-        //                sqlComm.Parameters.Add(new MySqlParameter("@emp_Userpassword", userpassword));
-        //                sqlComm.ExecuteNonQuery(); //EXECUTE MYSQL QUEUE STRING
-        //                response = Request.CreateResponse(HttpStatusCode.OK);
-        //                response.Content = new StringContent("Successfully Updated");
+                        return response;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.InternalServerError);
 
-        //                return response;
-        //            }
-        //            else
-        //            {
+                    response.Content = new StringContent("There is an error in performing this action: " + ex.ToString(), Encoding.Unicode);
 
-        //                response = Request.CreateResponse(HttpStatusCode.InternalServerError);
+                    return response;
+                }
+                finally //ALWAYS CLOSE AND DISPOSE THE CONNECTION AFTER USING
+                {
+                    SQLCON.Close();
+                    SQLCON.Dispose();
 
-        //                response.Content = new StringContent("Unable to connect to the database server", Encoding.UTF8);
+                }
+            }
+        }
 
-        //                return response;
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            response = Request.CreateResponse(HttpStatusCode.InternalServerError);
+        [HttpDelete]
+        [Route("api/employee/switch", Name = "Employee_Switch_Status")]
+        public HttpResponseMessage Employee_Switch_Status([FromUri] modEmployeeList p)
+        {
 
-        //            response.Content = new StringContent("There is an error in performing this action: " + ex.ToString(), Encoding.Unicode);
+            using (MySqlConnection SQLCON = new MySqlConnection(ConfigurationManager.ConnectionStrings["const"].ConnectionString))
+            {
+                try
+                {
+                    if (SQLCON.State == ConnectionState.Closed)
 
-        //            return response;
-        //        }
-        //        finally //ALWAYS CLOSE AND DISPOSE THE CONNECTION AFTER USING
-        //        {
-        //            SQLCON.Close();
-        //            SQLCON.Dispose();
+                    {
+                        SQLCON.Open();
+                        MySqlCommand sqlComm = new MySqlCommand();
+                        sqlComm.Connection = SQLCON;
+                        sqlComm.CommandText = "SELECT COUNT(*) FROM `disciplinepolicy`.`employee` WHERE `emp_id` = @emp_id";
+                        sqlComm.Parameters.Add(new MySqlParameter("@emp_id", p.emp_id));
 
-        //        }
-        //    }
-        //}
+                        int count = Convert.ToInt32(sqlComm.ExecuteScalar());
+                        SQLCON.Close();
 
-        //[Route("api/employee/remove", Name = "Delete_Employee_Remove")]
-        //public HttpResponseMessage Delete_Employee_Remove(string emp_id)
-        //{
-        //    using (MySqlConnection SQLCON = new MySqlConnection(ConfigurationManager.ConnectionStrings["const"].ConnectionString))
-        //    {
-        //        try
-        //        {
-        //            if (SQLCON.State == ConnectionState.Closed)
+                        if (count == 1)
+                        {
+                            SQLCON.Open();
+                            sqlComm.Connection = SQLCON;
 
-        //            {
+                            sqlComm.CommandText = "UPDATE `employee` SET `emp_status` = @emp_accountStatus WHERE `emp_id` = @emp_id1 LIMIT 1";
 
-        //                SQLCON.Open();
-        //                MySqlCommand sqlComm = new MySqlCommand();
-        //                sqlComm.Connection = SQLCON;
+                            sqlComm.Parameters.Add(new MySqlParameter("@emp_accountStatus", p.emp_accountStatus));
+                            sqlComm.Parameters.Add(new MySqlParameter("@emp_id1", p.emp_id));
+                            sqlComm.ExecuteNonQuery(); //EXECUTE MYSQL QUEUE STRING
+                            response = Request.CreateResponse(HttpStatusCode.OK);
+                            response.Content = new StringContent("Successfully Updated Status");
 
-        //                sqlComm.CommandText = "UPDATE `employee` SET `emp_status` = 0 WHERE `emp_id` = @emp_id LIMIT 1";
+                            return response;
+                        }
+                        else
+                        {
+                            response = Request.CreateResponse(HttpStatusCode.BadRequest);
+                            response.Content = new StringContent("User Not Found.");
+                            return response;
+                        }
 
-        //                sqlComm.Parameters.Add(new MySqlParameter("@emp_id", emp_id));
-        //                sqlComm.ExecuteNonQuery(); //EXECUTE MYSQL QUEUE STRING
-        //                response = Request.CreateResponse(HttpStatusCode.OK);
-        //                response.Content = new StringContent("Successfully Removed");
+                    }
+                    else
+                    {
 
-        //                return response;
-        //            }
-        //            else
-        //            {
+                        response = Request.CreateResponse(HttpStatusCode.InternalServerError);
 
-        //                response = Request.CreateResponse(HttpStatusCode.InternalServerError);
+                        response.Content = new StringContent("Unable to connect to the database server", Encoding.UTF8);
 
-        //                response.Content = new StringContent("Unable to connect to the database server", Encoding.UTF8);
+                        return response;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.InternalServerError);
 
-        //                return response;
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            response = Request.CreateResponse(HttpStatusCode.InternalServerError);
+                    response.Content = new StringContent("There is an error in performing this action: " + ex.ToString(), Encoding.Unicode);
 
-        //            response.Content = new StringContent("There is an error in performing this action: " + ex.ToString(), Encoding.Unicode);
+                    return response;
+                }
+                finally //ALWAYS CLOSE AND DISPOSE THE CONNECTION AFTER USING
+                {
+                    SQLCON.Close();
+                    SQLCON.Dispose();
 
-        //            return response;
-        //        }
-        //        finally //ALWAYS CLOSE AND DISPOSE THE CONNECTION AFTER USING
-        //        {
-        //            SQLCON.Close();
-        //            SQLCON.Dispose();
-
-        //        }
-        //    }
-        //}
+                }
+            }
+        }
 
     }
 }

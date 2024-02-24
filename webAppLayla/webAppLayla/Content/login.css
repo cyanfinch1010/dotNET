@@ -1,0 +1,14 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url("https://www.bleepstatic.com/content/hl-images/2022/02/14/kali-bright.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center center;
+}
+
+.card {
+    opacity: 0.9;
+}

@@ -1,0 +1,143 @@
+﻿@using webAppLayla.Models
+@model HomeModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EditEmployee</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<body>
+    <script src="~/Scripts/bootstrap.bundle.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery-3.7.1.js"></script>
+
+    <div class="modal" tabindex="-1" id="exampleModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-success">Success</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex justify-content-center align-items-center">
+                    @Html.Label("Message", new { @id = "lblMessage", @class = "text-break" })
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="close-data" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="justify-content-start"><a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary"><span class="material-symbols-outlined">first_page</span></a></h1>
+
+    @foreach (modHome item in Model.empList)
+    {
+        <div class="position-absolute top-50 start-50 translate-middle w-50">
+            <div class="card shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+                <h1 class="text-center"><span class="material-symbols-outlined">edit</span> Edit Details</h1>
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col">
+                            <label for="txtEmployeeFirstName">Employee Last Name</label>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="txtEmployeeLastName" placeholder="Employee Last Name" value="@Html.DisplayFor(modelItem => item.emp_lastName)">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label for="txtEmployeeFirstName">Employee First Name</label>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="txtEmployeeFirstName" placeholder="Employee First Name" value="@Html.DisplayFor(modelItem => item.emp_firstName)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <label for="txtEmployeeID">Employee ID</label>
+                    <div class="form-floating mb-3">
+                        <input readonly class="form-control-plaintext" id="txtEmployeeID" placeholder="Employee ID" value="@Html.DisplayFor(modelItem => item.emp_id)">
+                    </div>
+
+                    <label for="txtEmail">Employee Email</label>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="txtEmail" placeholder="Employee Email" value="@Html.DisplayFor(modelItem => item.emp_email)">
+                    </div>
+
+                    <label for="txtUsername">Username</label>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="txtUsername" placeholder="Username" value="@Html.DisplayFor(modelItem => item.emp_Username)">
+                    </div>
+
+                    <label for="txtPassword">Password</label>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="txtPassword" placeholder="Password" value="@Html.DisplayFor(modelItem => item.emp_Userpassword)">
+                    </div>
+
+                    <label for="txtGender">Gender</label>
+                    <select class="form-select mb-3 w-25 p-3" aria-label="Large select example" id="txtGender">
+                        <option selected>@Html.DisplayFor(modelItem => item.emp_gender)</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+
+                    <div class="text-center">
+                        <button type="button" id="put-data" class="btn btn-success " data-action="put-data">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <script type="text/javascript">
+        $('#put-data').click(function () {
+            $("#put-data").prop("disabled", true);
+            $("#put-data").html('Please wait...');
+
+            $.ajax({
+                url: '@Url.Action("EditEmployee", "Home")',
+                data: {
+                    emp_id: $('#txtEmployeeID').val(),
+                    emp_lastName: $('#txtEmployeeLastName').val(),
+                    emp_firstName: $('#txtEmployeeFirstName').val(),
+                    emp_email: $('#txtEmail').val(),
+                    emp_gender: $('#txtGender').val(),
+                    emp_Username: $('#txtUsername').val(),
+                    emp_Userpassword: $('#txtPassword').val()
+                },
+                dataType: 'text',
+                contentType: "application/x-www-form-urlencoded",
+                method: 'PUT',
+                success: function (data) {
+                    if (data == 'Successfully Updated') {
+                        $('#exampleModal').modal('show');
+                        document.getElementById("lblMessage").innerHTML = 'Successfully Updated.';
+                        $('#put-data').prop("disabled", false);
+                        $('#put-data').html("Submit");
+                    } else {
+                        $('#exampleModal').modal('show');
+                        document.getElementById("lblMessage").innerHTML = data;
+                        $("#put-data").prop("disabled", false);
+                        $("#put-data").html('Save Employee');
+                    }
+                },
+                error: function (jqXHR, exception) {
+                    $('#modalMessage').modal('show');
+                    document.getElementById("lblMessage").innerHTML = jqXHR.responseText;
+                    $("#get-data").prop("disabled", false);
+                    $("#get-data").html('Update Profile');
+                }
+            });
+
+        });
+
+        $('#close-data').click(function () {
+            $("#put-data").prop("disabled", false);
+            $("#put-data").html('Submit');
+        });
+    </script>
+
+</body>
+</html>
